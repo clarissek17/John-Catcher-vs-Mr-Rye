@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John Catcher vs. Mr. Rye</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #fdf5e6;
+            --ink: #2c3e50;
+            --gold: #b8860b;
+            --blood: #8b0000;
+            --dark-bg: #111111;
+            --kahoot-purple: #46178f;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Press Start 2P', monospace;
+            background-color: var(--dark-bg);
+            color: var(--ink);
+            height: 100%; overflow: hidden;
+            image-rendering: pixelated;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 9999;
+            user-select: none;
+            animation: particleFade 0.8s ease-out forwards;
+        }
+
+        @keyframes particleFade {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--mx), var(--my)) scale(0.5); }
+        }
+
+        .pixel-box {
+            background: var(--parchment);
+            border: 4px solid var(--ink);
+            box-shadow: 
+                0 4px 0 0 var(--ink),
+                0 -4px 0 0 var(--ink),
+                4px 0 0 0 var(--ink),
+                -4px 0 0 0 var(--ink);
+            position: relative;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #music-toggle {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: var(--gold); border: 4px solid var(--ink);
+            font-family: 'Press Start 2P', monospace;
+            width: 50px; height: 50px; font-size: 1rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .screen {
+            display: none; width: 100vw; height: 100vh;
+            position: absolute; background: var(--parchment);
+            flex-direction: column; align-items: center; justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .active { display: flex; }
+
+        #home-screen {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; color: white;
+            text-align: center;
+        }
+        #home-screen h1 {
+            font-size: 2rem;
+            line-height: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 4px 4px 0px var(--blood);
+        }
+
+        #cutscene-screen { 
+            background: #000; 
+            cursor: pointer; 
+            position: relative;
+        }
+        .cutscene-wrap { 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+        }
+        .cutscene-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.5) contrast(1.2) brightness(0.6);
+            z-index: 1;
+        }
+
+        .dialogue-char { 
+            position: absolute; 
+            bottom: -5%; 
+            transition: all 0.5s ease; 
+            opacity: 0; 
+            height: 85vh; 
+            width: auto;
+            z-index: 2;
+        }
+
+        .char-left { 
+            left: 5%; 
+            transform: translateX(-50px); 
+            filter: drop-shadow(-15px 15px 10px rgba(0,0,0,0.7)); 
+        }
+
+        .char-right { 
+            right: 5%; 
+            transform: translateX(50px) scaleX(-1); 
+            filter: drop-shadow(15px 15px 10px rgba(0,0,0,0.7)); 
+        }
+
+        .char-active { 
+            opacity: 1; 
+            transform: translateX(0); 
+        }
+        
+        #char-right.char-active {
+            transform: translateX(0) scaleX(-1); 
+        }
+
+        .dialogue-box {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            width: 70%; 
+            min-height: 120px;
+            font-size: 0.8rem;
+            line-height: 1.4rem;
+            z-index: 10;
+        }
+        .dialogue-box b { color: var(--blood); display: block; margin-bottom: 12px; font-size: 1rem; }
+
+        button.menu-btn {
+            padding: 15px 25px; font-size: 0.8rem; cursor: pointer;
+            background: var(--ink); color: white; border: 4px solid var(--gold);
+            font-family: 'Press Start 2P', monospace;
+            text-transform: uppercase;
+            box-shadow: 0 4px 0 #000;
+        }
+        button.menu-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #000;
+        }
+
+        .selection-container {
+            display: flex;
+            width: 90%;
+            height: 80%;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .char-box-left {
+            width: 32%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            padding-top: 60px;
+        }
+        .char-info-right {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .info-row-split {
+            display: flex;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        .info-subbox {
+            flex: 1;
+            font-size: 0.7rem;
+            line-height: 1.2rem;
+            overflow-y: auto;
+        }
+        .info-title-box {
+            font-size: 1.2rem;
+            padding: 15px;
+            color: var(--blood);
+            text-align: center;
+        }
+        .portrait-large {
+            width: 310px;  
+            height: 310px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .portrait-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .selection-arrow {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            background: var(--gold);
+            color: white;
+            border: 3px solid #000;
+            user-select: none;
+        }
+
+        .health-container { 
+            display: flex; justify-content: space-between; width: 85%; padding: 20px; 
+            background: transparent; margin-top: 10px; z-index: 10;
+        }
+        .health-bar-wrapper {
+            width: 35%;
+            font-size: 0.6rem;
+        }
+        .health-bar-label { margin-bottom: 6px; color: var(--ink); font-weight: bold; text-shadow: 2px 2px 0px white; }
+        .health-bar-bg { width: 100%; height: 20px; background: #555; border: 4px solid #000; position: relative; }
+        .health-fill { width: 100%; height: 100%; background: var(--blood); transition: width 0.3s ease; }
+
+        .stage { flex-grow: 1; display: flex; justify-content: space-around; align-items: center; width: 85%; position: relative; }
+        .fighter-container { position: relative; display: flex; flex-direction: column; align-items: center; }
+        .fighter { width: 280px; height: 280px; position: relative; z-index: 5; transition: transform 0.1s; filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.3)); }
+        .fighter img { width: 100%; height: 100%; object-fit: contain; }
+        
+        .winner-glow-effect {
+            animation: spritePulseGlow 1.5s infinite alternate ease-in-out;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px auto;
+        }
+        .winner-glow-effect img { width: 100%; height: 100%; object-fit: contain; }
+        
+        @keyframes spritePulseGlow {
+            0% { filter: drop-shadow(0 0 10px var(--gold)); transform: scale(1); }
+            100% { filter: drop-shadow(0 0 35px var(--blood)); transform: scale(1.08); }
+        }
+
+        .callout {
+            position: absolute; top: -50px; background: white; border: 3px solid var(--ink);
+            padding: 6px; font-size: 0.5rem; max-width: 150px; line-height: 0.8rem;
+            opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 20;
+            box-shadow: 3px 3px 0 #000;
+        }
+        .callout.show { opacity: 1; transform: translateY(-10px); }
+
+        .controls { 
+            height: 22%; width: 85%; 
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; 
+            padding: 10px; box-sizing: border-box; 
+            margin-bottom: 20px; z-index: 10;
+            background: transparent; 
+        }
+        .controls button {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.6rem;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px 15px; 
+            background: var(--parchment);
+            border: 3px solid var(--ink);
+            box-shadow: 3px 3px 0px #000;
+            flex: 0 1 calc(45% - 12px);
+            min-width: 200px;
+        }
+        .controls button:hover {
+            background: var(--gold);
+            color: white;
+        }
+        .controls button:disabled {
+            background: #bbb;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: 1px 1px 0px #000;
+            transform: translate(2px, 2px);
+        }
+        
+        #battle-dialogue { 
+            position: fixed; bottom: 26%; background: var(--parchment); 
+            border: 4px solid var(--gold); padding: 15px; width: 75%; 
+            display: none; text-align: center; font-size: 0.7rem; line-height: 1.2rem; z-index: 100; 
+            left: 50%; transform: translateX(-50%); 
+            box-shadow: 4px 4px 0 #000;
+        }
+
+        .shake { animation: shakeEffect 0.2s ease-in-out; }
+        @keyframes shakeEffect { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-12px); } 60% { transform: translateX(12px); } }
+    
+        .flash-text-banner {
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            font-size: 2.2rem; 
+            color: var(--gold); 
+            text-shadow: 5px 5px 0px #000, -2px -2px 0px var(--blood); 
+            z-index: 2000; 
+            text-align: center; 
+            white-space: normal; 
+            line-height: 3.5rem;
+            pointer-events: none; 
+            width: 85%;
+        }
+
+        .flash-animate { animation: zoomFade 2.5s cubic-bezier(0.15, 0.85, 0.35, 1.1) forwards; }
+        @keyframes zoomFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+        }
+
+        .victorious-glow {
+            animation: winTextGlow 1s infinite alternate ease-in-out;
+            text-shadow: 0 0 10px var(--gold), 4px 4px 0px #000;
+        }
+        @keyframes winTextGlow {
+            0% { transform: scale(1); text-shadow: 0 0 10px var(--gold), 4px 4px 0px #000; color: var(--gold); }
+            100% { transform: scale(1.1); text-shadow: 0 0 30px var(--blood), 0 0 50px var(--gold), 4px 4px 0px #000; color: #fff; }
+        }
+
+        #win-screen { z-index: 5000; text-align: center; }
+
+        .battle-bg-element {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* --- Kahoot Win Screen Styles --- */
+        #kahoot-win-screen {
+            background: var(--kahoot-purple);
+            color: white;
+            z-index: 6000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .kahoot-banner {
+            font-size: 1.8rem;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 4px 4px 0px #331067;
+            margin-top: 20px;
+            line-height: 2.8rem;
+            animation: kahootBounce 1s infinite alternate ease-in-out;
+        }
+        @keyframes kahootBounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        .kahoot-podium-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            width: 90%;
+            max-width: 800px;
+            height: 50%;
+            margin-bottom: 20px;
+            position: relative;
+            gap: 20px;
+        }
+        
+        .podium-name {
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 5px;
+            word-break: break-word;
+            line-height: 0.9rem;
+            margin-top: 10px;
+        }
+        .podium-sprite {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: podiumFloat 2s infinite alternate ease-in-out;
+        }
+        .podium-sprite img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        @keyframes podiumFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+        .kahoot-crowd-wrapper {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-top: 4px dashed rgba(255,255,255,0.3);
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+        .kahoot-crowd {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            justify-content: center;
+            min-width: max-content;
+        }
+        .crowd-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 65px;
+        }
+        .crowd-avatar {
+            width: 55px;
+            height: 55px;
+        }
+        .crowd-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .crowd-name {
+            font-size: 0.35rem;
+            color: #ccc;
+            margin-top: 4px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .jump-1 { animation: crowdJump 0.5s infinite alternate ease-in-out; }
+        .jump-2 { animation: crowdJump 0.6s infinite alternate ease-in-out 0.1s; }
+        .jump-3 { animation: crowdJump 0.4s infinite alternate ease-in-out 0.2s; }
+        
+        @keyframes crowdJump {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-12px); }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="music-start" loop src="startScreen.m4a"></audio>
+    <audio id="music-cutscene" loop src="cutscene.mp3"></audio>
+    <audio id="music-choose" loop src="chooseYourCharacter.m4a"></audio>
+    <audio id="music-battle" loop src="battleMusic.m4a"></audio>
+    <audio id="music-victory" loop src="victory.m4a"></audio>
+
+    <button id="music-toggle" onclick="toggleMusic()">🔇</button>
+
+    <section id="home-screen" class="screen active">
+        <h1>John Catcher<br><span style="font-size:1.2rem; color:var(--gold);">vs.</span><br>Mr. Rye</h1>
+        <button class="menu-btn" onclick="startCutscene()">Enter the Mashup</button>
+    </section>
+
+    <section id="cutscene-screen" class="screen" onclick="handleDialogueClick()">
+        <div class="cutscene-wrap">
+            <img id="cutscene-bg-img" class="cutscene-bg" src="images/cutsceneBackground.jpg" alt="Background">
+            
+            <img id="char-left" class="dialogue-char char-left" src="images/mrRye.png" alt="Opponent">
+            <img id="char-right" class="dialogue-char char-right" src="images/johnCatcher.png" alt="Benefactor">
+            
+            <div class="dialogue-box pixel-box">
+                <b id="speaker-name"></b>
+                <span id="speaker-text"></span>
+            </div>
+        </div>
+    </section>
+
+    <section id="selection-screen" class="screen">
+        <h2 style="font-size: 0.9rem; margin-top: 20px; color: var(--gold);">CHOOSE YOUR CHAMPION</h2>
+        <div class="selection-container">
+            <div class="char-box-left pixel-box">
+                <div class="portrait-large" id="p1-img"></div>
+                <div style="display: flex; gap: 15px; margin-top: auto;">
+                    <div class="selection-arrow" onclick="changeChar(-1)">◀</div>
+                    <div class="selection-arrow" onclick="changeChar(1)">▶</div>
+                </div>
+            </div>
+            <div class="char-info-right">
+                <div class="info-title-box pixel-box" id="p1-name">CHARACTER NAME</div>
+                <div class="info-subbox pixel-box" style="height: 90px;">
+                    <strong style="color:var(--gold); font-size:0.6rem; display:block; margin-bottom:5px;">CHARACTER DESCRIPTION</strong>
+                    <span id="p1-desc">Description text...</span>
+                </div>
+                <div class="info-row-split">
+                    <div class="info-subbox pixel-box">
+                        <strong style="color: green; font-size:0.6rem; display:block; margin-bottom:5px;">STRENGTHS</strong>
+                        <span id="p1-strengths">High structural archetypal consistency.</span>
+                    </div>
+                    <div class="info-subbox pixel-box">
+                        <strong style="color: var(--blood); font-size:0.6rem; display:block; margin-bottom:5px;">VULNERABILITY</strong>
+                        <span id="p1-weakness">Weakness details...</span>
+                    </div>
+                </div>
+                <button class="menu-btn" onclick="startDuel()" style="background: var(--blood); width: 100%;">SELECT CHARACTER</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="battle-screen" class="screen">
+        <img id="battle-bg-layer" class="battle-bg-element" src="images/CastleBackground.png" alt="Battleground">
+        <div class="health-container">
+            <div class="health-bar-wrapper">
+                <div class="health-bar-label" id="p1-label">PLAYER</div>
+                <div class="health-bar-bg"><div id="hp1" class="health-fill"></div></div>
+            </div>
+            <div class="health-bar-wrapper" style="text-align: right;">
+                <div class="health-bar-label" id="p2-label">OPPONENT</div>
+                <div class="health-bar-bg"><div id="hp2" class="health-fill"></div></div>
+            </div>
+        </div>
+        
+        <div class="stage">
+            <div class="fighter-container">
+                <div id="callout1" class="callout pixel-box"></div>
+                <div id="sprite1" class="fighter"></div>
+            </div>
+            <div class="fighter-container">
+                <div id="callout2" class="callout pixel-box"></div>
+                <div id="sprite2" class="fighter"></div>
+            </div>
+        </div>
+        
+        <div id="battle-dialogue" class="pixel-box">
+            <div id="dialogue-text"></div>
+        </div>
+        <div class="controls" id="battle-controls"></div>
+    </section>
+
+    <section id="win-screen" class="screen" style="background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('image_b63065.jpg'); background-size: cover;">
+        <div id="win-banner" class="victorious-glow" style="font-size: 2.5rem; margin-bottom: 20px;">VICTORIOUS</div>
+        <div id="winner-display" class="winner-glow-effect"></div>
+        <h2 id="winner-name" style="color: white; font-size: 1rem; margin-bottom: 40px; padding: 0 15px; line-height: 1.5rem;"></h2>
+        <button id="win-action-btn" class="menu-btn" onclick="advanceStory()" style="background: var(--gold); color: var(--ink);">Continue Story</button>
+    </section>
+
+    <!-- Interactive Kahoot Crowd Screen (Updated) -->
+    <section id="kahoot-win-screen" class="screen">
+        <div class="kahoot-banner">MISSION COMPLETE.<br>YOU WON!</div>
+        
+        <div class="kahoot-podium-container" id="kahoot-played-characters">
+            <!-- Dynamic character display injected via JS -->
+        </div>
+
+        <!-- Crowd containing all available game characters jumping around -->
+        <div class="kahoot-crowd-wrapper">
+            <div class="kahoot-crowd" id="kahoot-crowd-target">
+                <!-- Injected via JavaScript -->
+            </div>
+        </div>
+
+        <button class="menu-btn" onclick="location.reload()" style="background: #26890c; color: white; border-color: #6cc454; margin-top: 15px;">Play Again</button>
+    </section>
+
+    <div id="flash-text" class="flash-text-banner">ALERT BANNER</div>
+
+    <script>
+        const characters = [
+            { name: "Holden Caulfield", asset: "Holden.png", desc: "Not to be mistaken for John Catcher or Mr. Rye, this is the cynical prep school boy directionlessly wandering New York City. He likes kids (but not the way Mr. Antolini does)", weak: "Social", cries: ["PHONY!", "If you really want to hear about it..."], attacks: [{name: "Cynical Rant", type: "Truth", dmg: 20}, {name: "Catcher Dream", type: "Morality", dmg: 25}, {name: "Phony Callout", type: "Truth", dmg: 25}, {name: "Hunting Hat", type: "Ego", dmg: 15}] },
+            { name: "Pip Pirrip", asset: "Pip.png", desc: "Absolute simp who NEEDS to figure out that if he keeps his expectations LOW, then everything is way better when it happens. Sucks at spending money. Held hands with a girl once. #JusticeForJoe", weak: "Social", cries: ["I want to be a gentleman.", "Common? I'm not common!"], attacks: [{name: "Gentlemanly Grace", type: "Social", dmg: 15}, {name: "Benefactor's Gift", type: "Wealth", dmg: 25}, {name: "Apprentice Hammer", type: "Physical", dmg: 20}, {name: "Satis House Visit", type: "Ego", dmg: 20}] },
+            { name: "Jay Gatsby", asset: "Gatsby.png", desc: "Pip, but if he lived in the 1920s and dressed even gayer. The idealist, messy millionaire whose dream became the happiness for his reality.", weak: "Wealth", cries: ["Old Sport!", "Her voice is full of money..."], attacks: [{name: "Grand Party", type: "Wealth", dmg: 20}, {name: "Green Light Dream", type: "Ego", dmg: 25}, {name: "Yellow Rolls Royce", type: "Wealth", dmg: 35}, {name: "Oxford Man Lie", type: "Deception", dmg: 20}] },
+            { name: "Odysseus", asset: "Odysseus.png", desc: "The legendary, cunnning, and very loyal tactician returning home across 1000km, 10 years, and at least other ladies, to see his wife.", weak: "Pride", cries: ["Laertes' son who makes his home in Ithaca", "My name is Nobody."], attacks: [{name: "Trojan Strategy", type: "Truth", dmg: 25}, {name: "Odyssean Lie", type: "Deception", dmg: 20}, {name: "Great Bow", type: "Physical", dmg: 35}, {name: "Noman Trick", type: "Logic", dmg: 25}] },
+            { name: "Iago", asset: "Iago.png", desc: "THIS GUY. Pissy that he didn't get a promotion, and also had his office was being done, so the solution was to cause problems for like everyone. Probably monologues more than Holden Caufield.", weak: "Truth", cries: ["O, beware, my lord, of jealousy!", "I am not what I am."], attacks: [{name: "Green-Eyed Monster", type: "Deception", dmg: 25}, {name: "Poisoned Ear", type: "Social", dmg: 15}, {name: "Web of Lies", type: "Deception", dmg: 20}, {name: "Stolen Handkerchief", type: "Evidence", dmg: 30}] },
+            { name: "Hamlet", asset: "Hamlet.png", desc: "The existential, indecisive prince with a mission to avenge his father but also pretend to be crazy?? Whatever he's probably a gemini moon cancer sun", weak: "Logic", cries: ["To be, or not to be...", "The rest is silence."], attacks: [{name: "The Play's The Thing", type: "Truth", dmg: 30}, {name: "Soliloquy", type: "Logic", dmg: 15}, {name: "Fencing Duel", type: "Physical", dmg: 25}, {name: "Madness Act", type: "Deception", dmg: 20}] },
+            { name: "Ernest Worthing", asset: "Ernest.png", desc: "An expert bunburyist. His top three problems are his ward, his lady of interest, and his friend who keeps eating wayyyy too many muffins and is behind it all.", weak: "Deception", cries: ["I have a brother named Ernest!", "I am sick to death of muffins."], attacks: [{name: "Bunburying", type: "Deception", dmg: 20}, {name: "Witty Repartee", type: "Truth", dmg: 25}, {name: "Handbag Mystery", type: "Logic", dmg: 20}, {name: "Cucumber Sandwich", type: "Social", dmg: 15}] }
+        ];
+
+        const bossCharacter = { name: "Beowulf", asset: "beowulf.png", desc: "The final boss.", weak: "Ego", cries: ["YOU CANNOT DEFEAT ME. I'M TOO GOOD."], attacks: [{name: "Grendel's Grip", type: "Physical", dmg: 35}, {name: "Hrunting Strike", type: "Evidence", dmg: 25}, {name: "The Dragon's Hoard", type: "Wealth", dmg: 30}] };
+
+        let p1Idx = 0, p2Idx = 1, turn = 0, hp = [100, 100], isGameOver = false, inputLocked = false;
+        let musicEnabled = false, currentScreenId = 'home-screen';
+        let dialogueIndex = 0;
+        let lastAttackUsed = "";
+        let attackStreakCount = 0;
+
+        let currentBattleStage = 1; 
+        let cutsceneMode = "intro"; 
+        let currentDialogueArray = [];
+        let playedCharacters = [];
+
+        const introDialogue = [
+            { side: 'NONE', name: 'You', text: "He-, he-hello?" },
+            { side: 'JC', name: 'John Catcher', text: "Hey. The name's John. John Catcher." },
+            { side: 'NONE', name: 'You', text: "What's going on?" },
+            { side: 'JC', name: 'John Catcher', text: "You've heard of Mr Rye, haven't you?" },
+            { side: 'NONE', name: 'You', text: "Sure. Yeah, yeah-- he's the benefactor, protecting kids across the land, right?" },
+            { side: 'JC', name: 'John Catcher', text: "Haha yeah. More like funding kids to grow into his thugs." },
+            { side: 'JC', name: 'John Catcher', text: "Mr. B. Rye, my nemesis" },
+            { side: 'NONE', name: 'You', text: "What? Okay sure. Where am I?" },
+            { side: 'JC', name: 'John Catcher', text: "You're in Troy. But soon, you'll be in Ithaca. I'm sending you on a journey to find him. and bring an end to him." },
+            { side: 'NONE', name: 'You', text: "BRO WHAT" },
+            { side: 'JC', name: 'John Catcher', text: "I am your benefactor now. Good luck young one. His little thugs will be no match for your skills." },
+            { side: 'NONE', name: 'You', text: "Dawg." }
+        ];
+
+        function getPostBattle1Dialogue(enemyName, p1Name) {
+            return [
+                { side: 'MR', name: enemyName, text: "I respect your mission, young one. I am defeated." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Thanks bro, you too." },
+                { side: 'MR', name: enemyName, text: "You know why my benefactor is so despised by yours?" },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "No, why?" },
+                { side: 'MR', name: enemyName, text: "Mr. Rye, he slept with John Catcher's wife." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Bro are you for real" },
+                { side: 'MR', name: enemyName, text: "You are on a mission for vengeance, young one. Good luck. I die now. Onto your next battle" }
+            ];
+        }
+
+        function getPostBattle2Dialogue(enemyName, p1Name) {
+            return [
+                { side: 'MR', name: enemyName, text: "Why would you crash my party?" },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Orders from my benefactor, my bad" },
+                { side: 'MR', name: enemyName, text: "You're mistaken! Mr. Rye didn't actually sleep with Mrs. Catcher!" },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "How do you know?" },
+                { side: 'MR', name: enemyName, text: "Because I'M sleeping with her." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "WHAT THE" },
+                { side: 'MR', name: enemyName, text: "I even have her precious hankerchief for proof. Run along now, and leave me to die. It's time for you to meet my master." }
+            ];
+        }
+
+        function getPreBattle3Dialogue(p1Name) {
+            return [
+                { side: 'MR', name: 'Mr. Rye', text: "Hello. I have been expecting you" },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Uh haii." },
+                { side: 'MR', name: 'Mr. Rye', text: "Before you die, it's time I reveal myself." },
+                { side: 'MR', name: 'Mr. Rye', text: "For I am actually, " },
+                { side: 'MR', name: 'Beowulf', text: "BEOWULF!!!!!" },
+                { side: 'NONE', name: 'You', text: "BRUH. Okay." },
+                { side: 'MR', name: 'Beowulf', text: "YOU CANNOT DEFEAT ME. I'M TOO GOOD." },
+                { side: 'NONE', name: 'You', text: "We'll see." }
+            ];
+        }
+
+        const particlesList = ['⭐', '✨', '📜', '🖋️'];
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.15) return; 
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.innerText = particlesList[Math.floor(Math.random() * particlesList.length)];
+            p.style.left = e.clientX + 'px';
+            p.style.top = e.clientY + 'px';
+            
+            const mx = (Math.random() - 0.5) * 60 + 'px';
+            const my = (Math.random() - 0.5) * 60 + 'px';
+            p.style.setProperty('--mx', mx);
+            p.style.setProperty('--my', my);
+            
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 800);
+        });
+
+        function startCutscene() {
+            dialogueIndex = 0;
+            cutsceneMode = "intro";
+            currentDialogueArray = introDialogue;
+            document.getElementById('cutscene-bg-img').src = "images/cutsceneBackground.jpg";
+            showScreen('cutscene-screen');
+            updateDialogueUI();
+        }
+
+        function handleDialogueClick() {
+            nextDialogue();
+        }
+
+        function nextDialogue() {
+            dialogueIndex++;
+            if (dialogueIndex >= currentDialogueArray.length) {
+                if (cutsceneMode === "intro") {
+                    currentBattleStage = 1;
+                    showScreen('selection-screen');
+                    triggerFlash("CHOOSE YOUR CHARACTER"); 
+                } else if (cutsceneMode === "postBattle1") {
+                    currentBattleStage = 2;
+                    showScreen('selection-screen');
+                    triggerFlash("CHOOSE YOUR CHARACTER");
+                } else if (cutsceneMode === "postBattle2") {
+                    currentBattleStage = 3;
+                    showScreen('selection-screen');
+                    triggerFlash("CHOOSE FOR FINAL BATTLE");
+                } else if (cutsceneMode === "preBattle3") {
+                    launchBattleEngine();
+                }
+            } else {
+                updateDialogueUI();
+            }
+        }
+
+        function updateDialogueUI() {
+            const line = currentDialogueArray[dialogueIndex];
+            document.getElementById('speaker-name').innerText = line.name;
+            
+            const leftChar = document.getElementById('char-left');
+            const rightChar = document.getElementById('char-right');
+            
+            if (line.name === "John Catcher") {
+                rightChar.src = "images/johnCatcher.png";
+            } else if (line.name === "Mr. Rye") {
+                leftChar.src = "images/mrRye.png";
+            } else if (line.name === "Beowulf") {
+                leftChar.src = "images/beowulf.png";
+            } else if (line.side === 'MR') {
+                leftChar.src = `images/${characters[p2Idx].asset}`;
+            } else if (line.name.startsWith("You")) {
+                if (cutsceneMode !== "intro") {
+                    rightChar.src = `images/${characters[p1Idx].asset}`;
+                } else {
+                    rightChar.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+                }
+            }
+
+            if (line.side === 'MR' || line.name === "Mr. Rye" || line.name === "Beowulf" || line.name === "John Catcher") {
+                if (line.name === "John Catcher") {
+                    leftChar.classList.remove('char-active'); 
+                    rightChar.classList.add('char-active'); 
+                } else {
+                    leftChar.classList.add('char-active'); 
+                    rightChar.classList.remove('char-active'); 
+                }
+            } else { 
+                leftChar.classList.remove('char-active'); 
+                rightChar.classList.add('char-active'); 
+            }
+
+            document.getElementById('speaker-text').innerText = line.text;
+        }
+
+        function triggerFlash(text, callback) {
+            const flash = document.getElementById('flash-text');
+            flash.innerText = text;
+            flash.style.display = 'block';
+            flash.classList.add('flash-animate');
+
+            setTimeout(() => {
+                flash.style.display = 'none';
+                flash.classList.remove('flash-animate');
+                if (callback) callback();
+            }, 2500); 
+        }
+
+        function toggleMusic() {
+            musicEnabled = !musicEnabled;
+            document.getElementById('music-toggle').innerText = musicEnabled ? "🔊" : "🔇";
+            musicEnabled ? updateMusic() : document.querySelectorAll('audio').forEach(a => a.pause());
+        }
+
+        function updateMusic() {
+            if (!musicEnabled) return;
+            let trackId = 'music-start';
+            if (currentScreenId === 'cutscene-screen') trackId = 'music-cutscene';
+            if (currentScreenId === 'selection-screen' || currentScreenId === 'win-screen') trackId = 'music-choose';
+            if (currentScreenId === 'battle-screen') trackId = 'music-battle';
+            if (currentScreenId === 'kahoot-win-screen') trackId = 'music-victory';
+            
+            document.querySelectorAll('audio').forEach(a => {
+                if (a.id === trackId) { if (a.paused) a.play().catch(e => console.log(e)); }
+                else { a.pause(); a.currentTime = 0; }
+            });
+        }
+
+        function showScreen(id) {
+            currentScreenId = id;
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = id === 'kahoot-win-screen' ? 'flex' : 'flex';
+            
+            // Mirror logic of fallback class selectors
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            updateMusic();
+            if(id === 'selection-screen') updateSelectionUI();
+        }
+
+        function updateSelectionUI() {
+            const p1 = characters[p1Idx];
+            document.getElementById('p1-name').innerText = p1.name;
+            document.getElementById('p1-desc').innerText = p1.desc;
+            document.getElementById('p1-img').innerHTML = `<img src="images/${p1.asset}" alt="${p1.name}">`;
+            document.getElementById('p1-weakness').innerText = `Takes 2x Damage from themes of: [${p1.weak}]`;
+            document.getElementById('p1-strengths').innerText = `Specializes in executing actions like ${p1.attacks[0].name} & ${p1.attacks[1].name}.`;
+        }
+
+        function changeChar(dir) {
+            p1Idx = (p1Idx + dir + characters.length) % characters.length;
+            updateSelectionUI();
+        }
+
+        function startDuel() {
+            playedCharacters[currentBattleStage - 1] = characters[p1Idx];
+
+            if (currentBattleStage === 3) {
+                cutsceneMode = "preBattle3";
+                dialogueIndex = 0;
+                currentDialogueArray = getPreBattle3Dialogue(characters[p1Idx].name);
+                document.getElementById('cutscene-bg-img').src = "images/FinalBattle.png";
+                showScreen('cutscene-screen');
+                updateDialogueUI();
+                return;
+            }
+
+            do {
+                p2Idx = Math.floor(Math.random() * characters.length);
+            } while (p2Idx === p1Idx);
+
+            launchBattleEngine();
+        }
+
+        function launchBattleEngine() {
+            isGameOver = false; inputLocked = false; hp = [100, 100]; turn = 0; 
+            lastAttackUsed = ""; attackStreakCount = 0;
+            updateHP();
+            
+            const bgLayer = document.getElementById('battle-bg-layer');
+            if (currentBattleStage === 1) {
+                bgLayer.src = "images/CastleBackground.png";
+            } else if (currentBattleStage === 2) {
+                bgLayer.src = "images/MansionParty.png";
+            } else if (currentBattleStage === 3) {
+                bgLayer.src = "images/FinalBattle.png";
+            }
+
+            showScreen('battle-screen');
+            document.getElementById('p1-label').innerText = characters[p1Idx].name;
+            
+            const enemyChar = currentBattleStage === 3 ? bossCharacter : characters[p2Idx];
+            document.getElementById('p2-label').innerText = enemyChar.name + (currentBattleStage === 3 ? " (BOSS)" : " (CPU)");
+            
+            document.getElementById('sprite1').innerHTML = `<img src="images/${characters[p1Idx].asset}" alt="${characters[p1Idx].name}">`;
+            document.getElementById('sprite2').innerHTML = `<img src="images/${enemyChar.asset}" alt="${enemyChar.name}">`;
+            
+            triggerFlash("IT'S TIME TO DUEL", () => {
+                renderControls();
+            });
+        }
+
+        function renderControls() {
+            const container = document.getElementById('battle-controls');
+            container.innerHTML = "";
+            if(isGameOver) return;
+            
+            if (turn === 0) {
+                characters[p1Idx].attacks.forEach(atk => {
+                    const btn = document.createElement('button');
+                    btn.innerHTML = `<strong style="color:var(--blood)">${atk.name}</strong><br><span style="color:#666; font-size:0.45rem">Type: ${atk.type}</span>`;
+                    
+                    if (lastAttackUsed === atk.name && attackStreakCount >= 2) {
+                        btn.disabled = true;
+                        btn.innerHTML += `<br><span style="color:var(--blood); font-size:0.4rem;">STALE ATTACK!</span>`;
+                    }
+
+                    btn.onclick = () => {
+                        if (!inputLocked) handleAttack(atk);
+                    };
+                    container.appendChild(btn);
+                });
+            } else {
+                container.innerHTML = "<div style='text-align:center; font-size:0.55rem; color:var(--gold); padding:10px; width:100%;'>CPU IS RE-READING CANON CONTEXT...</div>";
+                setTimeout(() => {
+                    executeCpuTurn();
+                }, 1200);
+            }
+        }
+
+        function buildKahootCrowdWinScreen() {
+            const container = document.getElementById('kahoot-played-characters');
+            container.innerHTML = "";
+            
+            playedCharacters.forEach((char) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = "podium-sprite";
+                wrapper.innerHTML = `
+                    <img src="images/${char.asset}" alt="${char.name}">
+                    <div class="podium-name">${char.name}</div>
+                `;
+                container.appendChild(wrapper);
+            });
+            
+            const crowdTarget = document.getElementById('kahoot-crowd-target');
+            crowdTarget.innerHTML = "";
+            
+            const extraCrowd = [...characters, {name: "John Catcher", asset: "johnCatcher.png"}, {name: "Beowulf", asset: "beowulf.png"}];
+            
+            extraCrowd.forEach((char, index) => {
+                const jumpClass = `jump-${(index % 3) + 1}`;
+                const member = document.createElement('div');
+                member.className = `crowd-member ${jumpClass}`;
+                member.innerHTML = `
+                    <div class="crowd-avatar">
+                        <img src="images/${char.asset}" alt="${char.name}" onerror="this.style.opacity=0.3">
+                    </div>
+                    <div class="crowd-name">${char.name.split(' ')[0]}</div>
+                `;
+                crowdTarget.appendChild(member);
+            });
+
+            showScreen('kahoot-win-screen');
+        }
+
+        function handleAttack(attack) {
+            if(isGameOver || inputLocked) return;
+            inputLocked = true; 
+
+            if (turn === 0) {
+                if (lastAttackUsed === attack.name) {
+                    attackStreakCount++;
+                } else {
+                    lastAttackUsed = attack.name;
+                    attackStreakCount = 1;
+                }
+            }
+
+            const enemyChar = currentBattleStage === 3 ? bossCharacter : characters[p2Idx];
+            const attacker = turn === 0 ? characters[p1Idx] : enemyChar;
+            const targetIdx = turn === 0 ? 1 : 0;
+            const targetChar = targetIdx === 0 ? characters[p1Idx] : enemyChar;
+            const callout = document.getElementById(turn === 0 ? 'callout1' : 'callout2');
+            const targetSprite = document.getElementById(turn === 0 ? 'sprite2' : 'sprite1');
+            
+            let dmg = attack.dmg;
+            let executionText = "";
+            if (attack.type === targetChar.weak) {
+                dmg *= 2;
+                executionText = " <br><span style='color:var(--blood); font-size:0.55rem;'>CRITICAL CRITIQUE!</span>";
+            }
+            hp[targetIdx] -= dmg;
+            updateHP();
+
+            callout.innerText = attacker.cries[Math.floor(Math.random() * attacker.cries.length)];
+            callout.classList.add('show');
+            setTimeout(() => callout.classList.remove('show'), 1200);
+
+            targetSprite.classList.add('shake');
+            setTimeout(() => targetSprite.classList.remove('shake'), 250);
+
+            const overlay = document.getElementById('battle-dialogue');
+            document.getElementById('dialogue-text').innerHTML = `<strong>${attacker.name}</strong> deployed <strong style="color:var(--gold)">${attack.name}</strong>!${executionText}`;
+            overlay.style.display = 'block';
+
+            if (hp[targetIdx] <= 0) {
+                isGameOver = true;
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    const winActionBtn = document.getElementById('win-action-btn');
+                    
+                    if (targetIdx === 0) {
+                        document.getElementById('win-banner').innerText = "Plot Armour Failed";
+                        document.getElementById('winner-name').innerText = `${attacker.name} dismantled your setups. Pick a new character and try again!`;
+                        winActionBtn.innerText = "Try Again";
+                        winActionBtn.onclick = () => { showScreen('selection-screen'); };
+                        document.getElementById('winner-display').innerHTML = `<img src="images/${attacker.asset}" alt="${attacker.name}">`;
+                        showScreen('win-screen');
+                    } else {
+                        if (currentBattleStage === 1) {
+                            document.getElementById('win-banner').innerText = "VICTORIOUS";
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            winActionBtn.innerText = "Continue Story";
+                            winActionBtn.onclick = () => {
+                                cutsceneMode = "postBattle1";
+                                dialogueIndex = 0;
+                                currentDialogueArray = getPostBattle1Dialogue(characters[p2Idx].name, characters[p1Idx].name);
+                                document.getElementById('cutscene-bg-img').src = "images/CastleBackground.png";
+                                showScreen('cutscene-screen');
+                                updateDialogueUI();
+                            };
+                            document.getElementById('winner-display').innerHTML = `<img src="images/${attacker.asset}" alt="${attacker.name}">`;
+                            showScreen('win-screen');
+                        } else if (currentBattleStage === 2) {
+                            document.getElementById('win-banner').innerText = "VICTORIOUS";
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            winActionBtn.innerText = "Continue Story";
+                            winActionBtn.onclick = () => {
+                                cutsceneMode = "postBattle2";
+                                dialogueIndex = 0;
+                                currentDialogueArray = getPostBattle2Dialogue(characters[p2Idx].name, characters[p1Idx].name);
+                                document.getElementById('cutscene-bg-img').src = "images/MansionParty.png";
+                                showScreen('cutscene-screen');
+                                updateDialogueUI();
+                            };
+                            document.getElementById('winner-display').innerHTML = `<img src="images/${attacker.asset}" alt="${attacker.name}">`;
+                            showScreen('win-screen');
+                        } else if (currentBattleStage === 3) {
+                            document.getElementById('win-banner').innerText = "VICTORIOUS";
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            winActionBtn.innerText = "Claim Ultimate Victory";
+                            winActionBtn.onclick = () => {
+                                buildKahootCrowdWinScreen();
+                            };
+                            document.getElementById('winner-display').innerHTML = `<img src="images/${attacker.asset}" alt="${attacker.name}">`;
+                            showScreen('win-screen');
+                        }
+                    }
+                }, 1400);
+                return;
+            }
+
+            setTimeout(() => { 
+                overlay.style.display = 'none'; 
+                turn = turn === 0 ? 1 : 0; 
+                inputLocked = false; 
+                renderControls(); 
+            }, 1500);
+        }
+
+        function executeCpuTurn() {
+            if (isGameOver) return;
+            const enemyChar = currentBattleStage === 3 ? bossCharacter : characters[p2Idx];
+            const randomAtk = enemyChar.attacks[Math.floor(Math.random() * enemyChar.attacks.length)];
+            handleAttack(randomAtk);
+        }
+
+        function updateHP() {
+            document.getElementById('hp1').style.width = Math.max(0, hp[0]) + "%";
+            document.getElementById('hp2').style.width = Math.max(0, hp[1]) + "%";
+        }
+    </script>
+</body>
+</html>
