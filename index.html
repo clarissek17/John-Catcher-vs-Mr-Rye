@@ -14,7 +14,7 @@
             --gold: #b8860b;
             --blood: #8b0000;
             --dark-bg: #111111;
-            --kahoot-purple: #46178f;
+            --kahoot-purple: #7fb5c3;
         }
 
         body, html {
@@ -505,11 +505,11 @@
                 <div class="info-row-split">
                     <div class="info-subbox pixel-box">
                         <strong style="color: green; font-size:0.6rem; display:block; margin-bottom:5px;">STRENGTHS</strong>
-                        <span id="p1-strengths">High structural archetypal consistency.</span>
+                        <span id="p1-strengths">idk strong</span>
                     </div>
                     <div class="info-subbox pixel-box">
                         <strong style="color: var(--blood); font-size:0.6rem; display:block; margin-bottom:5px;">VULNERABILITY</strong>
-                        <span id="p1-weakness">Weakness details...</span>
+                        <span id="p1-weakness">idk weak</span>
                     </div>
                 </div>
                 <button class="menu-btn" onclick="startDuel()" style="background: var(--blood); width: 100%;">SELECT CHARACTER</button>
@@ -518,7 +518,7 @@
     </section>
 
     <section id="battle-screen" class="screen">
-        <img id="battle-bg-layer" class="battle-bg-element" src="images/CastleBackground.png" alt="Battleground">
+        <img id="battle-bg-layer" class="battle-bg-element" src="images/CastleBackground.jpg" alt="Battleground">
         <div class="health-container">
             <div class="health-bar-wrapper">
                 <div class="health-bar-label" id="p1-label">PLAYER</div>
@@ -600,16 +600,17 @@
 
         const introDialogue = [
             { side: 'NONE', name: 'You', text: "He-, he-hello?" },
-            { side: 'JC', name: 'John Catcher', text: "Hey. The name's John. John Catcher." },
+            { side: 'JC', name: 'John Catcher', text: "Hello there. The name's John Catcher." },
             { side: 'NONE', name: 'You', text: "What's going on?" },
             { side: 'JC', name: 'John Catcher', text: "You've heard of Mr Rye, haven't you?" },
-            { side: 'NONE', name: 'You', text: "Sure. Yeah, yeah-- he's the benefactor, protecting kids across the land, right?" },
-            { side: 'JC', name: 'John Catcher', text: "Haha yeah. More like funding kids to grow into his thugs." },
-            { side: 'JC', name: 'John Catcher', text: "Mr. B. Rye, my nemesis" },
+            { side: 'NONE', name: 'You', text: "Uh, yes-- he protects the children. He's a benefactor" },
+            { side: 'JC', name: 'John Catcher', text: "Haha yeah. He just collects characters and raises them be his thugs." },
+            { side: 'JC', name: 'John Catcher', text: "Mr. B. Rye, my nemesis..." },
             { side: 'NONE', name: 'You', text: "What? Okay sure. Where am I?" },
             { side: 'JC', name: 'John Catcher', text: "You're in Troy. But soon, you'll be in Ithaca. I'm sending you on a journey to find him. and bring an end to him." },
             { side: 'NONE', name: 'You', text: "BRO WHAT" },
-            { side: 'JC', name: 'John Catcher', text: "I am your benefactor now. Good luck young one. His little thugs will be no match for your skills." },
+            { side: 'JC', name: 'John Catcher', text: "I am your benefactor now. Good luck young one." },
+            { side: 'JC', name: 'John Catcher', text: "His little thugs will be no match for your skills." },
             { side: 'NONE', name: 'You', text: "Dawg." }
         ];
 
@@ -619,9 +620,10 @@
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "Thanks bro, you too." },
                 { side: 'MR', name: enemyName, text: "You know why my benefactor is so despised by yours?" },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "No, why?" },
-                { side: 'MR', name: enemyName, text: "Mr. Rye, he slept with John Catcher's wife." },
+                { side: 'MR', name: enemyName, text: "Mr. Rye slept with John Catcher's wife." },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "Bro are you for real" },
-                { side: 'MR', name: enemyName, text: "You are on a mission for vengeance, young one. Good luck. I die now. Onto your next battle" }
+                { side: 'MR', name: enemyName, text: "You are on a mission for vengeance, young one." },
+                { side: 'MR', name: enemyName, text: "Good luck. I die now. Onto your next battle" }
             ];
         }
 
@@ -633,20 +635,21 @@
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "How do you know?" },
                 { side: 'MR', name: enemyName, text: "Because I'M sleeping with her." },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "WHAT THE" },
-                { side: 'MR', name: enemyName, text: "I even have her precious hankerchief for proof. Run along now, and leave me to die. It's time for you to meet my master." }
+                { side: 'MR', name: enemyName, text: "I even have her precious hankerchief for proof." },
+                { side: 'MR', name: enemyName, text: "Run along now, and leave me to die. It's time for you to meet my master." }
             ];
         }
 
         function getPreBattle3Dialogue(p1Name) {
             return [
                 { side: 'MR', name: 'Mr. Rye', text: "Hello. I have been expecting you" },
-                { side: 'NONE', name: `You (as ${p1Name})`, text: "Uh haii." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Uh hello-." },
                 { side: 'MR', name: 'Mr. Rye', text: "Before you die, it's time I reveal myself." },
                 { side: 'MR', name: 'Mr. Rye', text: "For I am actually, " },
                 { side: 'MR', name: 'Beowulf', text: "BEOWULF!!!!!" },
-                { side: 'NONE', name: 'You', text: "BRUH. Okay." },
+                { side: 'NONE', name: 'You', text: "BRUHHHH. Okay" },
                 { side: 'MR', name: 'Beowulf', text: "YOU CANNOT DEFEAT ME. I'M TOO GOOD." },
-                { side: 'NONE', name: 'You', text: "We'll see." }
+                { side: 'NONE', name: 'You', text: "We'll see..." }
             ];
         }
 
@@ -810,7 +813,7 @@
                 cutsceneMode = "preBattle3";
                 dialogueIndex = 0;
                 currentDialogueArray = getPreBattle3Dialogue(characters[p1Idx].name);
-                document.getElementById('cutscene-bg-img').src = "images/FinalBattle.png";
+                document.getElementById('cutscene-bg-img').src = "images/FinalBattle.jpg";
                 showScreen('cutscene-screen');
                 updateDialogueUI();
                 return;
@@ -830,11 +833,11 @@
             
             const bgLayer = document.getElementById('battle-bg-layer');
             if (currentBattleStage === 1) {
-                bgLayer.src = "images/CastleBackground.png";
+                bgLayer.src = "images/CastleBackground.jpg";
             } else if (currentBattleStage === 2) {
-                bgLayer.src = "images/MansionParty.png";
+                bgLayer.src = "images/MansionParty.jpeg";
             } else if (currentBattleStage === 3) {
-                bgLayer.src = "images/FinalBattle.png";
+                bgLayer.src = "images/FinalBattle.jpg";
             }
 
             showScreen('battle-screen');
@@ -938,7 +941,7 @@
             let executionText = "";
             if (attack.type === targetChar.weak) {
                 dmg *= 2;
-                executionText = " <br><span style='color:var(--blood); font-size:0.55rem;'>CRITICAL CRITIQUE!</span>";
+                executionText = " <br><span style='color:var(--blood); font-size:0.55rem;'>CRITICAL ATTACK!</span>";
             }
             hp[targetIdx] -= dmg;
             updateHP();
@@ -962,7 +965,7 @@
                     
                     if (targetIdx === 0) {
                         document.getElementById('win-banner').innerText = "Plot Armour Failed";
-                        document.getElementById('winner-name').innerText = `${attacker.name} dismantled your setups. Pick a new character and try again!`;
+                        document.getElementById('winner-name').innerText = `${attacker.name} cooked you bruh. Pick a new character and try again!`;
                         winActionBtn.innerText = "Try Again";
                         winActionBtn.onclick = () => { showScreen('selection-screen'); };
                         document.getElementById('winner-display').innerHTML = `<img src="images/${attacker.asset}" alt="${attacker.name}">`;
@@ -970,13 +973,13 @@
                     } else {
                         if (currentBattleStage === 1) {
                             document.getElementById('win-banner').innerText = "VICTORIOUS";
-                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute literary victory!`;
                             winActionBtn.innerText = "Continue Story";
                             winActionBtn.onclick = () => {
                                 cutsceneMode = "postBattle1";
                                 dialogueIndex = 0;
                                 currentDialogueArray = getPostBattle1Dialogue(characters[p2Idx].name, characters[p1Idx].name);
-                                document.getElementById('cutscene-bg-img').src = "images/CastleBackground.png";
+                                document.getElementById('cutscene-bg-img').src = "images/CastleBackground.jpg";
                                 showScreen('cutscene-screen');
                                 updateDialogueUI();
                             };
@@ -984,13 +987,13 @@
                             showScreen('win-screen');
                         } else if (currentBattleStage === 2) {
                             document.getElementById('win-banner').innerText = "VICTORIOUS";
-                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute literary victory!`;
                             winActionBtn.innerText = "Continue Story";
                             winActionBtn.onclick = () => {
                                 cutsceneMode = "postBattle2";
                                 dialogueIndex = 0;
                                 currentDialogueArray = getPostBattle2Dialogue(characters[p2Idx].name, characters[p1Idx].name);
-                                document.getElementById('cutscene-bg-img').src = "images/MansionParty.png";
+                                document.getElementById('cutscene-bg-img').src = "images/MansionParty.jpeg";
                                 showScreen('cutscene-screen');
                                 updateDialogueUI();
                             };
@@ -998,7 +1001,7 @@
                             showScreen('win-screen');
                         } else if (currentBattleStage === 3) {
                             document.getElementById('win-banner').innerText = "VICTORIOUS";
-                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute textual victory!`;
+                            document.getElementById('winner-name').innerText = `${attacker.name} claims absolute literary victory!`;
                             winActionBtn.innerText = "Claim Ultimate Victory";
                             winActionBtn.onclick = () => {
                                 buildKahootCrowdWinScreen();
