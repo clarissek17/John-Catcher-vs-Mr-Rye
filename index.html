@@ -600,40 +600,43 @@
 
         const introDialogue = [
             { side: 'NONE', name: 'You', text: "He-, he-hello?" },
-            { side: 'JC', name: 'John Catcher', text: "Hello there. The name's John Catcher." },
-            { side: 'NONE', name: 'You', text: "What's going on?" },
-            { side: 'JC', name: 'John Catcher', text: "You've heard of Mr Rye, haven't you?" },
-            { side: 'NONE', name: 'You', text: "Uh, yes-- he protects the children. He's a benefactor" },
-            { side: 'JC', name: 'John Catcher', text: "Haha yeah. He just collects characters and raises them be his thugs." },
-            { side: 'JC', name: 'John Catcher', text: "Mr. B. Rye, my nemesis..." },
+            { side: 'JC', name: 'John Catcher', text: "Hello and congradulations, young shapeshifter. You have been chosen for a quest!" },
+            { side: 'NONE', name: 'You', text: "What? Who even are you?" },
+            { side: 'JC', name: 'John Catcher', text: "I'm John Catcher. Your benefactor, one could say" },
+            { side: 'JC', name: 'John Catcher', text: "See, there's trouble 'round these parts. Mr. B. Rye, my archnemesis, is catching characters in the rye fields near here" },            
+            { side: 'JC', name: 'John Catcher', text: "He warps their minds and indocrinates them to fight for him. We must put an end to this" },
             { side: 'NONE', name: 'You', text: "What? Okay sure. Where am I?" },
-            { side: 'JC', name: 'John Catcher', text: "You're in Troy. But soon, you'll be in Ithaca. I'm sending you on a journey to find him. and bring an end to him." },
-            { side: 'NONE', name: 'You', text: "BRO WHAT" },
-            { side: 'JC', name: 'John Catcher', text: "I am your benefactor now. Good luck young one." },
-            { side: 'JC', name: 'John Catcher', text: "His little thugs will be no match for your skills." },
-            { side: 'NONE', name: 'You', text: "Dawg." }
+            { side: 'JC', name: 'John Catcher', text: "You're in Troy. But soon, you'll be in Ithaca. I'm sending you on a journey to find him, and bring his end." },
+            { side: 'NONE', name: 'You', text: "This better take less than 10 years." },
+            { side: 'JC', name: 'John Catcher', text: "You, dear shapeshifter, have the power to harness the strengths of any character and defeat Mr. Rye! But you'll also be weak to their flaws..." },
+            { side: 'JC', name: 'John Catcher', text: "Your journey starts in Troy, and you'll find Mr. Rye in Ithaca. I'll keep close watch on you from New South Wales, and send you support from time to time." },
+            { side: 'JC', name: 'John Catcher', text: "Only you can win this for me." }
         ];
 
         function getPostBattle1Dialogue(enemyName, p1Name) {
             return [
-                { side: 'MR', name: enemyName, text: "I respect your mission, young one. I am defeated." },
+                { side: 'MR', name: enemyName, text: "I will soon lie with Yorrick, young shapeshifter, but first I must tell you..." },    
+                { side: 'MR', name: enemyName, text: "that I wish you the best upon your noble mission..." },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "Thanks bro, you too." },
-                { side: 'MR', name: enemyName, text: "You know why my benefactor is so despised by yours?" },
-                { side: 'NONE', name: `You (as ${p1Name})`, text: "No, why?" },
+                { side: 'MR', name: enemyName, text: "See, Mr. Rye is more cruel than you think. John Catcher is valid in hating him." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "... how so?" },
                 { side: 'MR', name: enemyName, text: "Mr. Rye slept with John Catcher's wife." },
-                { side: 'NONE', name: `You (as ${p1Name})`, text: "Bro are you for real" },
-                { side: 'MR', name: enemyName, text: "You are on a mission for vengeance, young one." },
-                { side: 'MR', name: enemyName, text: "Good luck. I die now. Onto your next battle" }
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "BRO are you so for real" },
+                { side: 'MR', name: enemyName, text: "She's also your mom and John Catcher is your dad." },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "WHAT" },
+                { side: 'MR', name: enemyName, text: "Your mission is for vengeance, young one. Vengeance for your brutalized father." },
+                { side: 'MR', name: enemyName, text: "See that mansion in West Egg? That's your next battle." },
+                { side: 'MR', name: enemyName, text: "I die now, good luck" }
             ];
         }
 
         function getPostBattle2Dialogue(enemyName, p1Name) {
             return [
-                { side: 'MR', name: enemyName, text: "Why would you crash my party?" },
+                { side: 'MR', name: enemyName, text: "Why did you crash my party?!" },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "Orders from my benefactor, my bad" },
-                { side: 'MR', name: enemyName, text: "You're mistaken! Mr. Rye didn't actually sleep with Mrs. Catcher!" },
-                { side: 'NONE', name: `You (as ${p1Name})`, text: "How do you know?" },
-                { side: 'MR', name: enemyName, text: "Because I'M sleeping with her." },
+                { side: 'MR', name: enemyName, text: "You fool! You're mistaken! Mr. Rye didn't actually sleep with Mrs. Catcher!" },
+                { side: 'NONE', name: `You (as ${p1Name})`, text: "Wha-? How do you know?" },
+                { side: 'MR', name: enemyName, text: "Because I'M THE ONE who's sleeping with her." },
                 { side: 'NONE', name: `You (as ${p1Name})`, text: "WHAT THE" },
                 { side: 'MR', name: enemyName, text: "I even have her precious hankerchief for proof." },
                 { side: 'MR', name: enemyName, text: "Run along now, and leave me to die. It's time for you to meet my master." }
